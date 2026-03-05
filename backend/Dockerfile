@@ -1,16 +1,23 @@
-FROM python:3.12
+FROM python:3.11-slim
 
 WORKDIR /code
 
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY requirements.txt .
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# Set default PORT environment variable to 10000 (Render default)
 ENV PORT=10000
-EXPOSE $PORT
+EXPOSE 10000
 
-# Execute uvicorn with shell form so $PORT gets expanded properly
-CMD uvicorn app.main:app --host 0.0.0.0 --port $PORT
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port $PORT"]

@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from .core.config import settings
 from .database import engine, Base
-from .routers import auth_router, upload_router, document_router, company_router, inventory_router, report_router, ai_router, dashboard_router
+from .routers import auth_router, upload_router, document_router, company_router, inventory_router, report_router, ai_router, dashboard_router, customer_router
 from .core.scheduler import start_scheduler, shutdown_scheduler
 from contextlib import asynccontextmanager
 
@@ -41,6 +41,7 @@ app.include_router(inventory_router.router, prefix=settings.API_V1_STR)
 app.include_router(report_router.router, prefix=settings.API_V1_STR)
 app.include_router(ai_router.router, prefix=settings.API_V1_STR)
 app.include_router(dashboard_router.router, prefix=settings.API_V1_STR)
+app.include_router(customer_router.router, prefix=settings.API_V1_STR)
 
 @app.get("/")
 def root():
